@@ -212,10 +212,11 @@ getChannels(host)
 {
 
 	ie	:= ComObjCreate("InternetExplorer.Application")
+	ie.visible := false
 	ie.navigate("http://" host "/lineup.html")
 	while ie.ReadyState != 4
 		Sleep, 100
-	ie.visible := false
+	
 	sleep 100
 	aChannels := {}
 	loop % (rows := ie.document.getElementById("channelTable").all.tags( "tr" )).length
