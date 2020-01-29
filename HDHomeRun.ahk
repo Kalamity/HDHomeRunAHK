@@ -2,7 +2,7 @@
 #SingleInstance, force 
 SetWorkingDir %A_ScriptDir%
 
-HDHomeRunDirectory := "C:\Program Files\Silicondust\HDHomeRun\hdhomerun_config.exe"
+HDHomeRunDirectory := "C:\Program Files\Silicondust\HDHomeRun"
 VLCPath := "C:\Program Files\VideoLAN\VLC\vlc.exe"
 aVLC := []
 vlcIndex := 1
@@ -89,9 +89,9 @@ CheckURL(Url, timeoutMS = ""){
 
 refreshChannels:
 LV_Delete()
-if RegExMatch(RunWaitOne("""" HDHomeRunDirectory  """ discover"), "hdhomerun device ([[:xdigit:]]+) found at (\d+.\d+.\d+.\d+)", host)
+if RegExMatch(RunWaitOne("""" HDHomeRunDirectory "\hdhomerun_config.exe"  """ discover"), "hdhomerun device ([[:xdigit:]]+) found at (\d+.\d+.\d+.\d+)", host)
 {
-	aChannels := getChannels(host)
+	aChannels := getChannels(host2)
 
 	for i, channel in aChannels
 		LV_Add(, channel.number, channel.name, channel.link)
@@ -210,8 +210,6 @@ playTest()
 
 getChannels(host)
 {
-
-	host := "192.168.1.100"
 
 	ie	:= ComObjCreate("InternetExplorer.Application")
 	ie.navigate("http://" host "/lineup.html")
