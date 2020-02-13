@@ -41,7 +41,7 @@ Gui, Add, Radio, x+10 yp vChannelB gChannelB, B
 Gui, Add, Checkbox, x+25 yp vRunOnStartUp Checked%RunOnStartUp% gToggleStartUp, Run on startup
 
 Gui, Add, Button, Hidden Default gEnterKeyInput, OK ; Default!
-gosub refreshChannels
+gosub % isobject(aChannels) ? "listChannels" :  "refreshChannels"
 Gui, Show,, TV
 return 
 
@@ -89,16 +89,15 @@ CheckURL(Url, timeoutMS = ""){
 
 refreshChannels:
 LV_Delete()
-if RegExMatch(RunWaitOne("""" HDHomeRunDirectory "\hdhomerun_config.exe"  """ discover"), "hdhomerun device ([[:xdigit:]]+) found at (\d+.\d+.\d+.\d+)", host)
-{
-	aChannels := getChannels(host2)
+if !RegExMatch(RunWaitOne("""" HDHomeRunDirectory "\hdhomerun_config.exe"  """ discover"), "hdhomerun device ([[:xdigit:]]+) found at (\d+.\d+.\d+.\d+)", host)
+	return
+aChannels := getChannels(host2)
+listChannels:
+for i, channel in aChannels
+	LV_Add(, channel.number, channel.name, channel.link)
 
-	for i, channel in aChannels
-		LV_Add(, channel.number, channel.name, channel.link)
-
-	LV_ModifyCol(3, 0) ; set column width to 0
-	LV_ModifyCol(1, "Auto"), LV_ModifyCol(2, "Auto") 
-}
+LV_ModifyCol(3, 0) ; set column width to 0
+LV_ModifyCol(1, "Auto"), LV_ModifyCol(2, "Auto") 
 return 
 
 EnterKeyInput:
